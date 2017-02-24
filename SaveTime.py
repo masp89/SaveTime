@@ -1,8 +1,8 @@
 # Save Time for McDonald's Service Desk Sweden
 # Written by Maria Aspvik at Capgemini Sweden.
 
-import sys
-from PyQt4 import  QtCore, QtGui
+import sys, subprocess
+from PyQt4 import QtCore, QtGui
 
 class Window(QtGui.QWidget):
 
@@ -14,6 +14,18 @@ class Window(QtGui.QWidget):
         self.home()
 
     def home(self):
+
+        beskr = QtGui.QLabel("Ange restaurangnummer nedan.", self)
+        beskr.resize(200,30)
+        beskr.move(150,100)
+
+        self.rest_nr = QtGui.QLineEdit("###", self)
+        self.rest_nr.setMaxLength(3)
+        self.rest_nr.resize(50, 30)
+        self.rest_nr.move(225, 150)
+
+
+
         btn_quit = QtGui.QPushButton("Avsluta", self)
         btn_set = QtGui.QPushButton("Öppna Waystation", self)
         btn_quit.resize(125, 30)
@@ -21,9 +33,49 @@ class Window(QtGui.QWidget):
         btn_quit.move(275, 250)
         btn_set.move(100, 250)
 
+
+
         btn_quit.clicked.connect(QtCore.QCoreApplication.instance().quit)
+        btn_set.clicked.connect(self.WSconnect)
 
         self.show()
+
+    def show_int_error(self):
+        message = QtGui.QMessageBox()
+        message.setIcon(QtGui.QMessageBox.Information)
+        message.setText("Skriv bara in siffror!")
+        message.setWindowTitle("Fel!")
+        message.setStandardButtons(QtGui.QMessageBox.Ok)
+        message.exec_()
+
+    def WSconnect(self):
+        try:
+            val = int(self.rest_nr.text())
+        except:
+            self.show_int_error()
+
+        if int(self.rest_nr.text()) == 231:
+            ip = '10.32.' + self.rest_nr.text() + '.71'
+            psw = 'Jvr963*14'
+
+        elif int(self.rest_nr.text()) < 256:
+            ip = '10.32.' + self.rest_nr.text() + '.71'
+            psw = 'Ark674!10'
+
+        elif int(self.rest_nr.text()) > 256:
+            temp_rest_nr = int(self.rest_nr.text()) - 256
+            ip = '10.117.' + str(temp_rest_nr) + '.71'
+            psw = 'Ark674!10'
+
+        net_use_string = r'net use \\\\' + ip + '\\d$\\Newpos61 /user:Administrator ' + psw
+        catalog_string = r'start \\\\' + ip + '\\d$\\Newpos61'
+        wayweb_string = r'start iexplore.exe http://' + ip + ':8080/way.html'
+        subprocess.Popen(net_use_string, shell=False)
+        subprocess.Popen(wayweb_string, shell=False)
+        subprocess.Popen(catalog_string, shell=False)
+
+
+
 
 def run():
     app = QtGui.QApplication(sys.argv)
