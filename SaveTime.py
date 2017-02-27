@@ -55,17 +55,17 @@ class Window(QtGui.QWidget):
             self.show_int_error()
 
         if int(self.rest_nr.text()) == 231:
-            ip = '10.32.' + self.rest_nr.text() + '.71'
-            psw = 'Jvr963*14'
+            ip = '*.*.' + self.rest_nr.text() + '.*'
+            psw = '******'
 
         elif int(self.rest_nr.text()) < 256:
-            ip = '10.32.' + self.rest_nr.text() + '.71'
-            psw = 'Ark674!10'
+            ip = '*.*.' + self.rest_nr.text() + '.*'
+            psw = '******'
 
         elif int(self.rest_nr.text()) > 256:
             temp_rest_nr = int(self.rest_nr.text()) - 256
-            ip = '10.117.' + str(temp_rest_nr) + '.71'
-            psw = 'Ark674!10'
+            ip = '*.*.' + str(temp_rest_nr) + '.*'
+            psw = '******'
 
         net_use_string = r'net use \\\\' + ip + '\\d$\\Newpos61 /user:Administrator ' + psw
         catalog_string = r'start \\\\' + ip + '\\d$\\Newpos61'
